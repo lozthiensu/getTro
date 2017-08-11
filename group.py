@@ -60,7 +60,7 @@ def makeGroupPathReady(groupId):
     except Exception as e:
         print("Error", e)
 def filterPost(posts):
-    keysBad = [" đồ ăn ","nhân viên"," tín dụng "," đào tạo ", " sản phẩm "," đặc trị ", " hàng ", " da trắng ", " mất ", " gầy ", " ăn ", " ship ", " ctv ", " tuyển ", " sim ", " số đẹp ", " đầu số ", " bán ", " cung cấp ", " thanh lý "]
+    keysBad = ["kinh doanh","giảm giá","đồng giá","giảm ngay","laptop","chuyên mua","móc khóa","chân gà","thuê xe","xe ôm","mua ngay","nhận ngay","ưu đãi","giá sốc","vay tiền","phụ làm","sân bóng","xe đạp","báo ứng","tham lam","cái kết","đàn ông","vợ","công chúa","bất động sản","hot","lịch học","nha đam","méo","đồ ăn","nhân viên","tín dụng","đào tạo", "sản phẩm","đặc trị", "hàng", "da trắng", "mất", "gầy", "ăn", "ship", "ctv", "tuyển", "sim", "số đẹp", "đầu số", "bán", "cung cấp", "thanh lý"]
     try:
         results = []
         # Loop all post
@@ -191,8 +191,9 @@ def getPhone(str):
 			last = str.find('02', last+2, len(str))
 	return phone
 def getPrice(str):
-    keyPrice = ["giá phòng:","giá:", "giá","giá tầm","tầm ", "giá khoảng", "giá từ", "giá dưới","khoảng ", "tháng"]
-    keyFindRes = ["triệu/", "triệu", "triệu.","trieu/","trieu","trieu.","tr/","tr5", "tr ","tr.","k/ ","0k ","0k.","5k "]
+    keyPrice = ["giá phòng:","giá tầm:","giá tầm","giá khoảng:", "giá khoảng","giá từ:", "giá từ","giá dưới:", "giá dưới","giá cỡ:", "giá cỡ","giá:", "giá ","tầm ","khoảng ", "tháng"]
+    # keyFindRes = ["triệu/", "triệu", "triệu.","trieu/","trieu","trieu.","tr/","tr5", "tr ","tr.","k/ ","0k ","0k.","5k "]
+    keyFindRes = ["tr1","tr2","tr3","tr4","tr5","tr6","tr7","tr8","tr9","tr/","triệu/","triệu","trieu/","trieu","trịu","triu","0k ","0k/","k/","5k","trăm/","trăm", "000000","00000","0000","000","vnđ","đỗlại","trởlại", "trởxuống"]
     price = ''
     #tim nguoc với <-keyFindRes
     test = 1
@@ -201,7 +202,7 @@ def getPrice(str):
             index = str.find(key)
             if index > 8:
                 for i in range(index - 8, index):
-                    if str[i].isdigit():
+                    if str[i].isdigit() and str[i+1]!='đ' and str[i+1] !='-':
                         for j in range(i, index):
                             price += str[j]
                         if index == (len(str) - 1):
@@ -264,14 +265,15 @@ def findInfoOfPost(posts):
             price = ""
             postId = post['id']
             # Find phone
-            phone = getPhone(message)
+            phone = getPhone(message.replace('.',''))
             # Find price
-            price = getPrice(message).replace('/','').replace('k','000').replace('tr1','100000').replace('tr2','200000').replace('tr4','400000').replace('tr5','500000').replace('tr6','600000').replace('tr7','700000').replace('tr8','800000').replace('tr9','900000').replace('tr5','500000').replace('tr','000000').replace('triệu','000000').replace('trieu','000000').replace(' ','')
+            # price = getPrice(message.replace('.','')).replace('/','').replace('k','000').replace('tr1','100000').replace('tr2','200000').replace('tr4','400000').replace('tr5','500000').replace('tr6','600000').replace('tr7','700000').replace('tr8','800000').replace('tr9','900000').replace('tr5','500000').replace('tr','000000').replace('triệu','000000').replace('trieu','000000').replace(' ','')
+            price = getPrice(message.replace('.','')).replace('/','').replace('trăm','00000').replace('k','000').replace('tr1','100000').replace('tr2','200000').replace('tr3','300000').replace('tr4','400000').replace('tr5','500000').replace('tr6','600000').replace('tr7','700000').replace('tr8','800000').replace('tr9','900000').replace('tr5','500000').replace('triệu','000000').replace('trieu','000000').replace('trịu','000000').replace('triu','000000').replace('tr','000000').replace(' ','')
             if price.isdigit():
-                price = price
+                if (int)(price) < 200000:
+                    price = ''
             else:
                 price = ''
-            # Find address
             for key in keysAddress:
                 index = message.find(key)
                 if index > -1:
@@ -279,23 +281,27 @@ def findInfoOfPost(posts):
                     temp = message.split(key,1)[1]
                     temp = temp.split('\n')[0]
                     #address += key
-                    if key =='chợ' or key == 'trường' or key == 'truog' or key == 'phường' or key == 'phuong' or key == 'truong' or key == 'trường' or key =='cầu' or key == 'cau' or key == 'hem' or key == 'hẻm':
-                        address += key
-                    keysEndAddress = [".","sđt","(",")","sdt","sdt","có","ai biết","xuống","của","không","ko","khong","bạn nào","gần","ai có nhu cầu","ai","bạn","hoặc", "...", "\n", "1tr", "1.5tr", "2tr", "triệu","cho"]
-                    end = -1
-                    for keyEnd in keysEndAddress:
-                        end = temp.find(keyEnd)
-                        if end > -1:
+                    keysEndAddress = ["- đà nẵng"," ạ,","đà nẵng","chơi","được k","giá","tại","ko","mà","cho","chỉ",","," ạ","với","vs","và","or","vì","hay"," ạ","càng",".","sđt","(",")","sdt","sdt","có","ai biết","xuống","của","không","ko","khong","bạn nào","gần","ai có nhu cầu"," ai ","bạn","hoặc","?", "...", "\n", "1tr", "1.5tr", "2tr", "triệu","cho"]
+                    for i in range(1,5):
+                        end = -1
+                        address = ''
+                        for keyEnd in keysEndAddress:
+                            end = temp.find(keyEnd)
+                            if end > -1:
+                                break
+                        n = len(temp)
+                        if end == -1:
+                            if n > 30:
+                                end = 30
+                            else:
+                                end = n
+                        for x in range(0, end):
+                            address += temp[x]
+                        if end == 30:
                             break
-                    n = len(temp)
-                    if end == -1:
-                        if n > 30:
-                            end = 30
-                        else:
-                            end = n
-                    for x in range(0, end):
-                        address += temp[x]
-                    # print(index, end, '*** DIA CHI:', address)
+                        temp = address
+                    if key =='chợ' or key == 'trường' or key == 'truog' or key == 'phường' or key == 'phuong' or key == 'truong' or key == 'trường' or key =='cầu' or key == 'cau' or key == 'hem' or key == 'hẻm':
+                        address = key + address
                     break
             
             address = address.replace('gần','')
@@ -346,7 +352,7 @@ def graphGroups():
             f = urllib.request.urlopen(urlGraphGroupFeeds, context=context)
             fJSON = json.loads(f.read().decode('utf-8'))
             posts = filterPost(fJSON['data'])
-
+            # print('kq: ', posts)
             # Init mongoclient 
             client = MongoClient()
             # Init connect 
