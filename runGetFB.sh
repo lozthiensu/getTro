@@ -1,7 +1,7 @@
 now=$(date +"%T")
-logFile="logGroup.txt"
+logFile="logRun.txt"
 echo "Start at : $now" >> $logFile
-python3 /Users/Kakalot/stkt/getFB/main.py >> $logFile
+python3.6 main.py >> $logFile
 now=$(date +"%T")
 echo "End at : $now" >> $logFile
 echo " " >> $logFile
