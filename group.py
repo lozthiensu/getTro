@@ -307,7 +307,8 @@ def findInfoOfPost(posts):
             address = address.replace('gần','')
             typePost = '0'
             objPost = {}
-            objPost['_id'] = postId.split('_')[1]
+            # objPost['id'] = postId.split('_')[1]
+            objPost['id'] = postId
             objPost['group_id'] = post['group_id']
             objPost['created_time'] = created_time
             objPost['updated_time'] = updated_time
@@ -357,6 +358,7 @@ def graphGroups():
             client = MongoClient()
             # Init connect
             client = MongoClient('mongodb://timtro:Qu%40ng.b%40o1994@45.77.33.147:27017/timtro')
+            # client = MongoClient('localhost', 27017)
             # Select database timtro
             db = client['timtro']
             # Select collection page
@@ -367,20 +369,22 @@ def graphGroups():
             # Cursor mongo to array _id
             postsMongo = []
             for postMongoCursor in postsMongoCursors:
-                postsMongo.append(postMongoCursor['_id'])
+                postsMongo.append(postMongoCursor['id'])
 
             # Find what post are new, or exist in mongodb
             postNew = []
             postUpdate = []
             for post in posts:
                 post['group_id'] = group['id']
-                post['_id'] = post['id'].split('_')[1]
+                idTemp = post['id'].split('_')[1]
+                print(post['id'])
+                post['id'] = idTemp
                 postExist = False
                 for postM in postsMongo:
-                    if post['_id'] == postM:
+                    if post['id'] == postM:
                         postExist = True
                         objPost = {}
-                        objPost['_id'] = postM
+                        objPost['id'] = postM
                         objPost['updated_time'] = post['updated_time']
                         postUpdate.append(objPost)
                         break

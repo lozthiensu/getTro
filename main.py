@@ -1,11 +1,15 @@
 import group
 import page
 from pymongo import MongoClient
+from pymongo.errors import BulkWriteError
 import geocoder
 import pprint
 import requests
 import json
 from money import Money
+from datetime import datetime
+import time
+import datetime
 
 def getNotificationPrice(db, pricess):
     notifications = []
@@ -51,7 +55,7 @@ def getNotificationAll(db, postInsert):
     for cursorAll in cursorAlls:
         platformAll.append(cursorAll['playerId'])
         for post in postInsert:
-            notifications.append((cursorAll['id'], cursorAll['playerId'], post['group_id'] + '_' + post['_id'], post['created_time']))
+            notifications.append((cursorAll['id'], cursorAll['playerId'], post['group_id'] + '_' + post['id'], post['created_time']))
     return (notifications, platformAll)
 
 if __name__ == "__main__":
@@ -97,35 +101,38 @@ if __name__ == "__main__":
                             for location in locationss:
                                 if location[0] == latNguyen and location[1] == lngNguyen:
                                     hasExist = True
-                                    location[2].append((post['_id'] + '' + post['group_id'], post['address'], post['created_time']))
+                                    location[2].append((post['id'] + '' + post['group_id'], post['address'], post['created_time']))
                             if hasExist == False:
-                                locationss.append((latNguyen, lngNguyen, [(post['group_id'] + '_' + post['_id'], post['address'], post['created_time'])]))
+                                locationss.append((latNguyen, lngNguyen, [(post['group_id'] + '_' + post['id'], post['address'], post['created_time'])]))
                             post['location'] = {'lat': lat, 'lng': lng}
                             print('Address', post['address'], g.latlng)
+                        else:
+                            post.pop('address', None)
                     except Exception as e:
                         print('Error', e)
-                    else:
-                        post.pop('address', None)
                 if 'price' in post:
                     price = int(post['price'])
                     if price < 1000000:
-                        pricess[0].append((post['price'], post['group_id'] + '_' + post['_id'], post['created_time']))
+                        pricess[0].append((post['price'], post['group_id'] + '_' + post['id'], post['created_time']))
                     elif price >= 1000000 and price < 2000000:
-                        pricess[1].append((post['price'], post['group_id'] + '_' + post['_id'], post['created_time']))
+                        pricess[1].append((post['price'], post['group_id'] + '_' + post['id'], post['created_time']))
                     elif price >= 2000000 and price < 5000000:
-                        pricess[2].append((post['price'], post['group_id'] + '_' + post['_id'], post['created_time']))
+                        pricess[2].append((post['price'], post['group_id'] + '_' + post['id'], post['created_time']))
                     elif price > 5000000:
-                        pricess[3].append((post['price'], post['group_id'] + '_' + post['_id'], post['created_time']))
+                        pricess[3].append((post['price'], post['group_id'] + '_' + post['id'], post['created_time']))
 
                     # print('Price', post['price'])
                 bulk.insert(post)
                 # print('IN', post)
             for post in postUpdate:
                 # print('Update:', post)
-                bulk.find({'_id':post['_id']}).update({'$set': {'updated_time': post['updated_time']}})
-
-            result = bulk.execute()
-            print(result)
+                bulk.find({'id':post['id']}).update({'$set': {'updated_time': post['updated_time']}})
+            try:
+                print('Chuan bij insert')
+                result = bulk.execute()
+                print(result)
+            except BulkWriteError as bwe:
+                pprint(bwe.details)
 
             print('Tu mongo')
             pricesNoti, platformPrice = getNotificationPrice(db, pricess)
@@ -158,7 +165,6 @@ if __name__ == "__main__":
            "include_player_ids": platformToPush, "contents": {"en": "Có phòng trọ mới"}, "template_id":"7c3f5519-229b-42e1-b5d1-539649c19e0b", "url":"http://tronhanh.net"}
             req = requests.post("https://onesignal.com/api/v1/notifications", headers=header, data=json.dumps(payload))
             print(req)
-            print(req.status_code, req.reason)
 
         print('Main run success')
         exit(0)
