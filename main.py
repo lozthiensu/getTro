@@ -83,24 +83,27 @@ if __name__ == "__main__":
             for post in postInsert:
                 # print(type(post), 'Insert:',post)
                 if 'address' in post:
-                    g = geocoder.google(post['address'])
-                    if(len(g.latlng)> 0):
-                        lat = g.latlng[0]
-                        lng = g.latlng[1]
-                        # print(lat, lng)
-                        latDu = lat % 0.02;
-                        latNguyen = lat - latDu;
-                        lngDu = lng % 0.02;
-                        lngNguyen = lng - lngDu;
-                        hasExist = False
-                        for location in locationss:
-                            if location[0] == latNguyen and location[1] == lngNguyen:
-                                hasExist = True
-                                location[2].append((post['_id'] + '' + post['group_id'], post['address'], post['created_time']))
-                        if hasExist == False:
-                            locationss.append((latNguyen, lngNguyen, [(post['group_id'] + '_' + post['_id'], post['address'], post['created_time'])]))
-                        post['location'] = {'lat': lat, 'lng': lng}
-                        print('Address', post['address'], g.latlng)
+                    try:
+                        g = geocoder.google(post['address'])
+                        if(len(g.latlng)> 0):
+                            lat = g.latlng[0]
+                            lng = g.latlng[1]
+                            # print(lat, lng)
+                            latDu = lat % 0.02;
+                            latNguyen = lat - latDu;
+                            lngDu = lng % 0.02;
+                            lngNguyen = lng - lngDu;
+                            hasExist = False
+                            for location in locationss:
+                                if location[0] == latNguyen and location[1] == lngNguyen:
+                                    hasExist = True
+                                    location[2].append((post['_id'] + '' + post['group_id'], post['address'], post['created_time']))
+                            if hasExist == False:
+                                locationss.append((latNguyen, lngNguyen, [(post['group_id'] + '_' + post['_id'], post['address'], post['created_time'])]))
+                            post['location'] = {'lat': lat, 'lng': lng}
+                            print('Address', post['address'], g.latlng)
+                    except Exception as e:
+                        print('Error', e)
                     else:
                         post.pop('address', None)
                 if 'price' in post:
