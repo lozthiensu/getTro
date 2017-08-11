@@ -87,6 +87,7 @@ if __name__ == "__main__":
             for post in postInsert:
                 # print(type(post), 'Insert:',post)
                 if 'address' in post:
+                    post['address'] = post['address'].replace(":", "")
                     try:
                         g = geocoder.google(post['address'], key='AIzaSyD5HT4F1rnEINxRD0KTAE1VIKeMP0DwdP0')
                         if(len(g.latlng)> 0):
