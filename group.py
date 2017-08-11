@@ -60,7 +60,7 @@ def makeGroupPathReady(groupId):
     except Exception as e:
         print("Error", e)
 def filterPost(posts):
-    keysBad = ["Sơmi ","chuyền","balo","shop","sơmi ","bao tử","phân phối","thanh lí","thanh lý","tự làm","đủ loại","chó ","facebook.com","body","kinh doanh","giảm giá","đồng giá","giảm ngay","laptop","chuyên mua","móc khóa","chân gà","thuê xe","xe ôm","mua ngay","nhận ngay","ưu đãi","giá sốc","vay tiền","phụ làm","sân bóng","xe đạp","báo ứng","tham lam","cái kết","đàn ông","vợ","công chúa","bất động sản","hot","lịch học","nha đam","méo","đồ ăn","nhân viên","tín dụng","đào tạo", "sản phẩm","đặc trị", "hàng", "da trắng", "mất", "gầy", "ăn", "ship", "ctv", "tuyển", "sim", "số đẹp", "đầu số", "bán", "cung cấp", "thanh lý"]
+    keysBad = ["Sơmi ","chuyền","balo","opppo","oppo","ip4s","iphone","ip5s","ipad","giày"," son ","shop","sơmi ","bao tử","phân phối","thanh lí","thanh lý","tự làm","đủ loại","chó ","facebook.com","body","kinh doanh","giảm giá","đồng giá","giảm ngay","laptop","chuyên mua","móc khóa","chân gà","thuê xe","xe ôm","mua ngay","nhận ngay","ưu đãi","giá sốc","vay tiền","phụ làm","sân bóng","xe đạp","báo ứng","tham lam","cái kết","đàn ông","vợ","công chúa","bất động sản","hot","lịch học","nha đam","méo","đồ ăn","nhân viên","tín dụng","đào tạo", "sản phẩm","đặc trị", "hàng", "da trắng", "mất", "gầy", "ăn", "ship", "ctv", "tuyển", "sim", "số đẹp", "đầu số", "bán", "cung cấp", "thanh lý"]
     try:
         results = []
         # Loop all post
