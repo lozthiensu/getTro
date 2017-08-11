@@ -5,6 +5,7 @@ import geocoder
 import pprint
 import requests
 import json
+from money import Money
 
 def getNotificationPrice(db, pricess):
     notifications = []
@@ -137,9 +138,9 @@ if __name__ == "__main__":
             collectionNotifications = db['notifications']
             bulkNotofications = collectionNotifications.initialize_ordered_bulk_op()
             for x in pricesNoti:
-                bulkNotofications.insert({'userId': x[0], 'postId': x[2], 'content': 'Có phòng trọ mới giá ' + str(x[3]), 'read': 0, 'created_time': x[4]})
+                bulkNotofications.insert({'userId': x[0], 'postId': x[2], 'content': 'Có phòng trọ mới giá: ' + str(Money(x[3], 'VND')), 'read': 0, 'created_time': x[4]})
             for x in locationsNoti:
-                bulkNotofications.insert({'userId': x[0], 'postId': x[2], 'content': 'Có phòng trọ mới tại ' + str(x[3]), 'read': 0, 'created_time': x[4]})
+                bulkNotofications.insert({'userId': x[0], 'postId': x[2], 'content': 'Có phòng trọ mới tại: ' + str(x[3]), 'read': 0, 'created_time': x[4]})
             for x in allsNoti:
                 bulkNotofications.insert({'userId': x[0], 'postId': x[2], 'content': 'Có phòng trọ mới', 'read': 0, 'created_time': x[3]})
 
