@@ -377,7 +377,7 @@ def graphGroups():
             for post in posts:
                 post['group_id'] = group['id']
                 idTemp = post['id'].split('_')[1]
-                print(post['id'])
+                # print(post['id'])
                 post['id'] = idTemp
                 postExist = False
                 for postM in postsMongo:
