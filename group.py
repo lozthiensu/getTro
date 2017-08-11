@@ -20,7 +20,7 @@ def makeGroupIdReady():
         # Read group and page json
         groupAndPage = handleFileJson.readJson('data/groupAndPage.json')
         groups = []
-        
+
         context = ssl._create_unverified_context()
         for obj in groupAndPage:
             # If type == 0 is group, 1 is page
@@ -35,8 +35,8 @@ def makeGroupIdReady():
                     data = fJSON['data'][0]
                     obj['id'] = data['id']
                     print('Group has id: ', obj)
-                groups.append(obj)  
-        
+                groups.append(obj)
+
         # Overwite group and page json
         handleFileJson.writeJson('data/groupAndPage.json', groupAndPage)
 
@@ -198,7 +198,7 @@ def getPrice(str):
     #tim nguoc với <-keyFindRes
     test = 1
     try:
-        for key in keyFindRes:  
+        for key in keyFindRes:
             index = str.find(key)
             if index > 8:
                 for i in range(index - 8, index):
@@ -241,13 +241,13 @@ def getPrice(str):
                                         price += temp[t]
                                     else:
                                         return price
-                            ii = ii + 1  
+                            ii = ii + 1
                     break
     except Exception as e:
         price = ''
     return ''
 def findInfoOfPost(posts):
-    # keysPhone = ["lh ", "sđt ", "số điện thoại", "lh :", "sđt :", "số điện thoại :", "lh:", "sđt:", "số điện thoại:"] # call 
+    # keysPhone = ["lh ", "sđt ", "số điện thoại", "lh :", "sđt :", "số điện thoại :", "lh:", "sđt:", "số điện thoại:"] # call
     keysAddress = ["ở khu vực", "khu vực", "gần trường","gần trg","ở hẻm", "gần chợ", "gần trung tâm","gần phường","trên đường","hẻm","hem", "gần chỗ","ở chỗ","gần khu","địa chỉ","ở gần", "ở tại","ở ngay", "gần","phường", "tại", "đường ", "đc","đ/c","d/c","gần cầu","chỗ cầu"]
     try:
         results = []
@@ -303,7 +303,7 @@ def findInfoOfPost(posts):
                     if key =='chợ' or key == 'trường' or key == 'truog' or key == 'phường' or key == 'phuong' or key == 'truong' or key == 'trường' or key =='cầu' or key == 'cau' or key == 'hem' or key == 'hẻm':
                         address = key + address
                     break
-            
+
             address = address.replace('gần','')
             typePost = '0'
             objPost = {}
@@ -317,7 +317,7 @@ def findInfoOfPost(posts):
                     objPost['address'] = address +', Đà Nẵng'
                 else:
                     objPost['address'] = 'Đà Nẵng'
-                
+
             if price is not "":
                 objPost['price'] = price
             if phone is not "":
@@ -353,17 +353,17 @@ def graphGroups():
             fJSON = json.loads(f.read().decode('utf-8'))
             posts = filterPost(fJSON['data'])
             # print('kq: ', posts)
-            # Init mongoclient 
+            # Init mongoclient
             client = MongoClient()
-            # Init connect 
-            client = MongoClient('localhost', 27017)
+            # Init connect
+            client = MongoClient('mongodb://timtro:Qu%40ng.b%40o1994@45.77.33.147:27017/timtro')
             # Select database timtro
             db = client['timtro']
             # Select collection page
             collection = db['posts']
 
             postsMongoCursors = collection.find({"group_id": group['id']}).sort("created_time", pymongo.DESCENDING).limit(100)
-            
+
             # Cursor mongo to array _id
             postsMongo = []
             for postMongoCursor in postsMongoCursors:
@@ -393,7 +393,7 @@ def graphGroups():
             postInsert = findInfoOfPost(postNew)
             if len(postInsert) > 0:
                 postInsert.sort(key=itemgetter('created_time'))
-                
+
             print('4. Insert', len(postInsert))
 
             return (postUpdate, postInsert)

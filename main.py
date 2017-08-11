@@ -51,7 +51,7 @@ def getNotificationAll(db, postInsert):
     for cursorAll in cursorAlls:
         platformAll.append(cursorAll['playerId'])
         for post in postInsert:
-            notifications.append((cursorAll['_id'], cursorAll['playerId'], post['group_id'] + '_' + post['_id'], post['created_time']))
+            notifications.append((cursorAll['id'], cursorAll['playerId'], post['group_id'] + '_' + post['_id'], post['created_time']))
     return (notifications, platformAll)
 
 if __name__ == "__main__":
@@ -71,7 +71,8 @@ if __name__ == "__main__":
             # Init mongoclient
             client = MongoClient()
             # Init connect
-            client = MongoClient('localhost', 27017)
+            # client = MongoClient('localhost', 27017)
+            client = MongoClient('mongodb://timtro:Qu%40ng.b%40o1994@45.77.33.147:27017/timtro')
             # Select database timtro
             db = client['timtro']
             # Select collection page
