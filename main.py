@@ -88,7 +88,7 @@ if __name__ == "__main__":
                 # print(type(post), 'Insert:',post)
                 if 'address' in post:
                     try:
-                        g = geocoder.google(post['address'])
+                        g = geocoder.google(post['address'], key='AIzaSyD5HT4F1rnEINxRD0KTAE1VIKeMP0DwdP0')
                         if(len(g.latlng)> 0):
                             lat = g.latlng[0]
                             lng = g.latlng[1]
@@ -128,7 +128,7 @@ if __name__ == "__main__":
                 # print('Update:', post)
                 bulk.find({'id':post['id']}).update({'$set': {'updated_time': post['updated_time']}})
             try:
-                print('Chuan bij insert')
+                print('Chuan bi insert')
                 result = bulk.execute()
                 print(result)
             except BulkWriteError as bwe:
