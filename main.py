@@ -91,6 +91,8 @@ if __name__ == "__main__":
                     post['address'] = post['address'].replace(" ,", ",")
                     post['address'] = post['address'].lstrip()
                     post['address'] = post['address'].rstrip()
+                    post['address'] = post['address'].replace("/", "")
+                    post['address'] = "%s%s" % (post['address'][0].upper(), post['address'][1:])
                     try:
                         g = geocoder.google(post['address'], key='AIzaSyD5HT4F1rnEINxRD0KTAE1VIKeMP0DwdP0')
                         if(len(g.latlng)> 0):
@@ -109,8 +111,6 @@ if __name__ == "__main__":
                             if hasExist == False:
                                 locationss.append((latNguyen, lngNguyen, [(post['group_id'] + '_' + post['id'], post['address'], post['created_time'])]))
                             post['location'] = {'lat': lat, 'lng': lng}
-                            post['address'] = post['address'].replace("/", "")
-                            post['address'] = "%s%s" % (post['address'][0].upper(), post['address'][1:])
                             print('Address', post['address'], g.latlng)
                         else:
                             post.pop('address', None)
